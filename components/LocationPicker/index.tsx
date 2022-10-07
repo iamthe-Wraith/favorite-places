@@ -1,22 +1,30 @@
 import { getCurrentPositionAsync, useForegroundPermissions, PermissionStatus } from 'expo-location';
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { View, ViewStyle, StyleProp, Alert, Image, Text } from 'react-native';
+import { useNavigation, useRoute, useIsFocused, RouteProp } from '@react-navigation/native';
 import { getLocationPreviewUrl } from '../../utils/location';
 import { OutlinedButton } from '../buttons/OutlinedButton';
 import { styles } from './styles';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ICoordinates, RootParamList } from '../../types/navigation';
 
 interface IProps {
   style?: StyleProp<ViewStyle>;
 }
 
-interface ILocation {
-  lat: number;
-  lng: number;
-}
+type NavigationProps = NativeStackNavigationProp<RootParamList, 'Map'>;
+type RouteProps = RouteProp<RootParamList, 'AddPlace'>
 
 export const LocationPicker: FC<IProps> = ({ style }) => {
+  const navigation = useNavigation<NavigationProps>();
+  const route = useRoute<RouteProps>();
+  const isFocused = useIsFocused();
   const [locationPermissionInfo, requestPermission] = useForegroundPermissions();
-  const [location, setLocation] = useState<ILocation>(null);
+  const [location, setLocation] = useState<ICoordinates>(route.params?.selectedLocation || null);
+
+  useEffect(() => {
+    if (isFocused) setLocation(route.params?.selectedLocation || null);
+  }, [isFocused, route.params?.selectedLocation]);
 
   const verifyPermission = useCallback(async () => {
     if (locationPermissionInfo.status === PermissionStatus.GRANTED ) return true;
@@ -36,11 +44,11 @@ export const LocationPicker: FC<IProps> = ({ style }) => {
 
     const currentLocation = await getCurrentPositionAsync();
 
-    setLocation({ lat: currentLocation.coords.latitude, lng: currentLocation.coords.longitude });
+    setLocation({ latitude: currentLocation.coords.latitude, longitude: currentLocation.coords.longitude });
   }, [verifyPermission]);
 
   const onPickOnMapPress = useCallback(() => {
-    console.log('Pick on map');
+    navigation.navigate('Map');
   }, [verifyPermission]);
 
   return (
@@ -48,7 +56,7 @@ export const LocationPicker: FC<IProps> = ({ style }) => {
       <View style={ styles.mapPreview }>
         {
           location
-            ? <Image source={ {uri: getLocationPreviewUrl(location.lat, location.lng) } } style={ styles.map } />
+            ? <Image source={ {uri: getLocationPreviewUrl(location.latitude, location.longitude) } } style={ styles.map } />
             : <Text>No Location Found</Text>
         }
       </View>
