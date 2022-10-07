@@ -1,6 +1,7 @@
 import { FC, useCallback, useState } from 'react';
 import { View, Text, ViewStyle, StyleProp, ScrollView, TextInput } from 'react-native';
 import { ImagePicker } from '../ImagePicker';
+import { LocationPicker } from '../LocationPicker';
 import { styles } from './styles';
 
 interface IProps {
@@ -25,6 +26,7 @@ export const PlaceForm: FC<IProps> = ({ style }) => {
         />
       </View>
       <ImagePicker />
+      <LocationPicker />
     </ScrollView>
   );
 };

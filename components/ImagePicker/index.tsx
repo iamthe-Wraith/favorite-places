@@ -15,7 +15,7 @@ export const ImagePicker: FC<IProps> = ({ style }) => {
   const verifyPermission = useCallback(async () => {
     if (cameraPermissionInfo.status === PermissionStatus.GRANTED ) return true;
     if (cameraPermissionInfo.status === PermissionStatus.DENIED) {
-      Alert.alert('Permission needed', 'You need to grant camera permission to use this feature');
+      Alert.alert('Permission needed', 'You need to grant camera permissions to use this app');
       return false;
     }
 
