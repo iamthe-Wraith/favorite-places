@@ -15,11 +15,11 @@ export const PlaceItem: FC<IProps> = ({ place, onPress, style }) => {
   }, []);
 
   return (
-    <Pressable style={ [styles.container, style] } onPress={ onPlacePress }>
-      <Image source={ { uri: place.imageUri } } />
-      <View>
-        <Text>{ place.title }</Text>
-        <Text>{ place.address }</Text>
+    <Pressable style={ ({ pressed }) => [styles.container, pressed && styles.pressed, style] } onPress={ onPlacePress }>
+      <Image style={ styles.image } source={ { uri: place.imageUri } } />
+      <View style={ styles.infoContainer }>
+        <Text style={ styles.title }>{ place.title }</Text>
+        <Text style={ styles.address }>{ place.address }</Text>
       </View>
     </Pressable>
   );
