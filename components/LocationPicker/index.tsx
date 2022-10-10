@@ -2,25 +2,40 @@ import { getCurrentPositionAsync, useForegroundPermissions, PermissionStatus } f
 import { FC, useCallback, useEffect, useState } from 'react';
 import { View, ViewStyle, StyleProp, Alert, Image, Text } from 'react-native';
 import { useNavigation, useRoute, useIsFocused, RouteProp } from '@react-navigation/native';
-import { getLocationPreviewUrl } from '../../utils/location';
+import { getAddressFromCoords, getLocationPreviewUrl } from '../../utils/location';
 import { OutlinedButton } from '../buttons/OutlinedButton';
 import { styles } from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ICoordinates, RootParamList } from '../../types/navigation';
+import { ILocation, RootParamList } from '../../types/navigation';
 
 interface IProps {
+  onLocationPicked(location: ILocation): void;
   style?: StyleProp<ViewStyle>;
 }
 
 type NavigationProps = NativeStackNavigationProp<RootParamList, 'Map'>;
 type RouteProps = RouteProp<RootParamList, 'AddPlace'>
 
-export const LocationPicker: FC<IProps> = ({ style }) => {
+export const LocationPicker: FC<IProps> = ({ onLocationPicked, style }) => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProps>();
   const isFocused = useIsFocused();
   const [locationPermissionInfo, requestPermission] = useForegroundPermissions();
-  const [location, setLocation] = useState<ICoordinates>(route.params?.selectedLocation || null);
+  const [location, setLocation] = useState<ILocation>(route.params?.selectedLocation || null);
+
+  useEffect(() => {
+    if (location) {
+      getAddressFromCoords(location.latitude, location.longitude)
+        .then(address => {
+          onLocationPicked({ ...location, address });
+        })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .catch((err: any) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          Alert.alert('Error', err.message as string);
+        });
+    }
+  }, [location, onLocationPicked]);
 
   useEffect(() => {
     if (isFocused) setLocation(route.params?.selectedLocation || null);

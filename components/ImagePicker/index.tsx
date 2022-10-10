@@ -5,10 +5,11 @@ import { styles } from './styles';
 import { OutlinedButton } from '../buttons/OutlinedButton';
 
 interface IProps {
+  onImagePicked(image: string): void;
   style?: StyleProp<ViewStyle>;
 }
 
-export const ImagePicker: FC<IProps> = ({ style }) => {
+export const ImagePicker: FC<IProps> = ({ onImagePicked, style }) => {
   const [cameraPermissionInfo, requestPermission] = useCameraPermissions();
   const [picture, setPicture] = useState('');
 
@@ -35,6 +36,7 @@ export const ImagePicker: FC<IProps> = ({ style }) => {
     }) as ImageInfo;
 
     setPicture(pic.uri);
+    onImagePicked(pic.uri);
   }, [verifyPermission]);
 
   return (
@@ -48,7 +50,8 @@ export const ImagePicker: FC<IProps> = ({ style }) => {
       </View>
       <OutlinedButton
         icon='camera'
-        onPress={ void onTakePicturePress }
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onPress={ onTakePicturePress }
       >
         Take Picture
       </OutlinedButton>

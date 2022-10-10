@@ -21,6 +21,7 @@ module.exports = {
     'jsx-quotes': ['error', 'prefer-single'],
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
+    '@typescript-eslint/no-floating-promises': 'off',
     'react/jsx-curly-spacing': [2, {
       when: 'always',
       allowMultiline: true,

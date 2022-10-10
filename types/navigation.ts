@@ -1,11 +1,12 @@
 
-export interface ICoordinates {
+export interface ILocation {
   latitude: number;
   longitude: number;
+  address?: string;
 }
 
 export type RootParamList = {
   AllPlaces: undefined;
-  AddPlace: { selectedLocation: ICoordinates };
-  Map: ICoordinates;
+  AddPlace: { selectedLocation: ILocation };
+  Map: ILocation;
 }

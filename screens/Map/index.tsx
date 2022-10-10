@@ -3,7 +3,7 @@ import { FC, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { ViewStyle, StyleProp, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MapView, { MapEvent, Marker } from 'react-native-maps';
-import { ICoordinates, RootParamList } from '../../types/navigation';
+import { ILocation, RootParamList } from '../../types/navigation';
 import { styles } from './styles';
 import { IconButton } from '../../components/buttons/IconButton';
 
@@ -15,7 +15,7 @@ export type NavigationProps = NativeStackNavigationProp<RootParamList, 'AddPlace
 
 export const Map: FC<IProps> = ({ style }) => {
   const navigation = useNavigation<NavigationProps>();
-  const [selectedLocation, setSelectedLocation] = useState<ICoordinates>(null);
+  const [selectedLocation, setSelectedLocation] = useState<ILocation>(null);
 
   const region = useRef({
     latitude: 37.78825,

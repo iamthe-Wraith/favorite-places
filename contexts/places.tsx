@@ -1,8 +1,9 @@
-import { createContext, FC, ReactNode, useMemo, useState } from 'react';
+import { createContext, FC, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { Place } from '../models/place';
 
 interface IPlacesContext {
   places: Place[];
+  addPlace: (place: Place) => void;
 }
 
 interface IProps {
@@ -11,11 +12,18 @@ interface IProps {
 
 const PlacesContext = createContext<IPlacesContext>(null);
 
+export const usePlaces = () => useContext(PlacesContext);
+
 export const PlacesProvidor: FC<IProps> = ({ children }) => {
   const [places, setPlaces] = useState<Place[]>([]);
 
+  const addPlace = useCallback((place: Place) => {
+    setPlaces((prevPlaces) => [...prevPlaces, place]);
+  }, []);
+
   const value = useMemo(() => ({
     places,
+    addPlace,
   }), [places]);
 
   return (
