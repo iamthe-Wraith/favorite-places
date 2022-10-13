@@ -6,7 +6,8 @@ import { getAddressFromCoords, getLocationPreviewUrl } from '../../utils/locatio
 import { OutlinedButton } from '../buttons/OutlinedButton';
 import { styles } from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ILocation, RootParamList } from '../../types/navigation';
+import { RootParamList } from '../../types/navigation';
+import { ILocation } from '../../types/place';
 
 interface IProps {
   onLocationPicked(location: ILocation): void;

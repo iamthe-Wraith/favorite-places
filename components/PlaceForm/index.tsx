@@ -1,14 +1,13 @@
 import { FC, useCallback, useState } from 'react';
 import { View, Text, ViewStyle, StyleProp, ScrollView, TextInput } from 'react-native';
-import { Place } from '../../models/place';
-import { ILocation } from '../../types/navigation';
+import { ILocation } from '../../types/place';
 import { Button } from '../buttons/Button';
 import { ImagePicker } from '../ImagePicker';
 import { LocationPicker } from '../LocationPicker';
 import { styles } from './styles';
 
 interface IProps {
-  onSubmit(place: Place): void;
+  onSubmit(title: string, image: string, location: ILocation): void;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -32,9 +31,8 @@ export const PlaceForm: FC<IProps> = ({ onSubmit, style }) => {
   }, []);
 
   const onSavePress = useCallback(() => {
-    const place = new Place(title, image, location);
     reset();
-    onSubmit(place);
+    onSubmit(title, image, location);
   }, [title, image, location]);
 
   const onTitleChange = useCallback((val: string) => {
