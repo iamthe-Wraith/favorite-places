@@ -28,14 +28,14 @@ export const PlaceDetails: FC<IProps> = ({ style }) => {
       })
       .catch(err => {
         // eslint-disable-next-line no-console
-        console.log('>>>>> error fetching place', err);
+        console.log('[-] error fetching place', err);
         Alert.alert('Error', 'Something went wrong');
       });
   }, [params.placeId]);
 
   const onViewOnMapPress = useCallback(() => {
-    // navigation.navigate('Map', { selectedLocation: place.location });
-  }, []);
+    navigation.navigate('Map', place?.location);
+  }, [place]);
 
   if (!place) return null;
 

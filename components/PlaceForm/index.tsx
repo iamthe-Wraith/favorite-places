@@ -7,7 +7,7 @@ import { LocationPicker } from '../LocationPicker';
 import { styles } from './styles';
 
 interface IProps {
-  onSubmit(title: string, image: string, location: ILocation): void;
+  onSubmit(title: string, image: string, location: ILocation): Promise<void>;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -31,8 +31,8 @@ export const PlaceForm: FC<IProps> = ({ onSubmit, style }) => {
   }, []);
 
   const onSavePress = useCallback(() => {
-    reset();
     onSubmit(title, image, location);
+    reset();
   }, [title, image, location]);
 
   const onTitleChange = useCallback((val: string) => {

@@ -27,8 +27,8 @@ export default function App() {
       .then(() => setDBInitialized(true))
       .catch((err) => {
         // eslint-disable-next-line no-console
-        console.log('>>>>> error initializing db', err);
-        Alert.alert('Something went wrong!');
+        console.log('[-] error initializing db', err);
+        Alert.alert('Something went wrong!', 'Failed to initialize database.');
       });
   }, []);
 
@@ -65,9 +65,6 @@ export default function App() {
             <StackNavigator.Screen
               name='Map'
               component={ Map }
-              options={ {
-                title: 'Select Location'
-              } }
             />
             <StackNavigator.Screen
               name='PlaceDetails'

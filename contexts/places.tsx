@@ -6,7 +6,7 @@ import { fetchPlaces, insertPlace } from '../utils/database';
 
 interface IPlacesContext {
   places: Place[];
-  addPlace: (title: string, imageUri: string, location: ILocation) => void;
+  addPlace: (title: string, imageUri: string, location: ILocation) => Promise<void>;
 }
 
 interface IProps {
@@ -25,15 +25,21 @@ export const PlacesProvidor: FC<IProps> = ({ children }) => {
       .then(setPlaces)
       .catch((err) => {
         // eslint-disable-next-line no-console
-        console.log('>>>>> error fetching places', err);
+        console.log('[-] error fetching places', err);
         Alert.alert('Something went wrong!', 'Could not load places.');
       });
   }, []);
 
-  const addPlace = useCallback(async (title: string, imageUri: string, location: ILocation) => {
-    const place = await insertPlace(title, imageUri, location.address, location.latitude, location.longitude);
-    setPlaces((prevPlaces) => [...prevPlaces, place]);
-  }, []);
+  const addPlace = useCallback(async (title: string, imageUri: string, location: ILocation): Promise<void> => {
+    try {
+      const place = await insertPlace(title, imageUri, location.address, location.latitude, location.longitude);
+      setPlaces((prevPlaces) => [...prevPlaces, place]);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.log('[-] error adding place in context', err);
+      Alert.alert('Something went wrong!', 'Could not add place.');
+    }
+  }, [insertPlace]);
 
   const value = useMemo(() => ({
     places,

@@ -16,7 +16,11 @@ export const init = () => new Promise((res, rej) => {
         lng REAL NOT NULL
       )`,
     [],
-    () => res(null),
+    () => {
+      // eslint-disable-next-line no-console
+      console.log('[+] db initialized');
+      res(null);
+    },
     (_, err) => {
       rej(err);
       return false;
@@ -31,18 +35,33 @@ export const insertPlace = (title: string, imageUri: string, address: string, la
       'INSERT INTO places (title, imageUri, address, lat, lng) VALUES (?, ?, ?, ?, ?)',
       [title, imageUri, address, lat, lng],
       (_, result) => {
-        const { id, title, imageUri, address, lat, lng } = result.rows._array[0] as IRawPlace;
-        const place = new Place(
-          id,
-          title,
-          imageUri,
-          {
-            address,
-            latitude: lat,
-            longitude: lng,
-          }
+        tx.executeSql(
+          'SELECT * FROM places WHERE id = ?',
+          [result.insertId.toString()],
+          (_, result) => {
+            try {
+              const { id, title, imageUri, address, lat, lng } = result.rows._array[0] as IRawPlace;
+              const place = new Place(
+                id,
+                title,
+                imageUri,
+                {
+                  address,
+                  latitude: lat,
+                  longitude: lng,
+                }
+              );
+              res(place);
+            } catch (err) {
+              rej(err);
+              return false;
+            }
+          },
+          (_, err) => {
+            rej(err);
+            return false;
+          },
         );
-        res(place);
       },
       (_, err) => {
         rej(err);
